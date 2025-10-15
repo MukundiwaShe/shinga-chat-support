@@ -5,8 +5,11 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Chat from "./pages/Chat";
+import Auth from "./pages/Auth";
 import Affirmations from "./pages/Affirmations";
 import MoodTracker from "./pages/MoodTracker";
+import Journal from "./pages/Journal";
+import Challenges from "./pages/Challenges";
 import Resources from "./pages/Resources";
 import About from "./pages/About";
 import NotFound from "./pages/NotFound";
@@ -22,8 +25,11 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/chat" element={<Chat />} />
+          <Route path="/auth" element={<Auth />} />
           <Route path="/affirmations" element={<Affirmations />} />
           <Route path="/mood-tracker" element={<MoodTracker />} />
+          <Route path="/journal" element={<Journal />} />
+          <Route path="/challenges" element={<Challenges />} />
           <Route path="/resources" element={<Resources />} />
           <Route path="/about" element={<About />} />
           <Route path="*" element={<NotFound />} />

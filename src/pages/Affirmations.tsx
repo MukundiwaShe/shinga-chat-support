@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Sparkles, RefreshCw } from "lucide-react";
+import { Sparkles, RefreshCw, User } from "lucide-react";
 import Navbar from "@/components/Navbar";
+import { supabase } from "@/integrations/supabase/client";
 
 const affirmationsData = {
   en: [
@@ -40,6 +41,38 @@ const affirmationsData = {
 const Affirmations = () => {
   const [language, setLanguage] = useState<"en" | "sn" | "nd">("en");
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [user, setUser] = useState<any>(null);
+  const [userName, setUserName] = useState<string>("");
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+      if (session?.user) {
+        loadUserProfile(session.user.id);
+      }
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      setUser(session?.user ?? null);
+      if (session?.user) {
+        loadUserProfile(session.user.id);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const loadUserProfile = async (userId: string) => {
+    const { data } = await supabase
+      .from("profiles")
+      .select("full_name")
+      .eq("id", userId)
+      .single();
+    
+    if (data?.full_name) {
+      setUserName(data.full_name);
+    }
+  };
 
   const affirmations = affirmationsData[language];
   const currentAffirmation = affirmations[currentIndex];
@@ -57,7 +90,14 @@ const Affirmations = () => {
           <div className="text-center mb-8">
             <h1 className="text-4xl font-bold mb-4">Daily Affirmations</h1>
             <p className="text-lg text-muted-foreground">
-              Start your day with positive thoughts and encouragement
+              {user ? (
+                <span className="flex items-center justify-center gap-2">
+                  <User className="h-5 w-5" />
+                  Hello {userName || "there"}! Start your day with positive thoughts
+                </span>
+              ) : (
+                "Get instant emotional support - no sign-in required for emergencies"
+              )}
             </p>
           </div>
 

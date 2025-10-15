@@ -1,10 +1,48 @@
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Heart, Menu, X, LogOut, User } from "lucide-react";
 import { Button } from "./ui/button";
-import { Heart, Menu, X } from "lucide-react";
-import { useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [user, setUser] = useState<any>(null);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    toast({
+      title: "Signed out",
+      description: "You've been successfully signed out.",
+    });
+    navigate("/");
+  };
+
+  const navItems = [
+    { path: "/", label: "Home" },
+    { path: "/chat", label: "Chat" },
+    { path: "/affirmations", label: "Affirmations" },
+    { path: "/mood-tracker", label: "Mood Tracker" },
+    { path: "/journal", label: "Journal", auth: true },
+    { path: "/challenges", label: "Challenges", auth: true },
+    { path: "/resources", label: "Resources" },
+    { path: "/about", label: "About" },
+  ];
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
@@ -21,21 +59,40 @@ const Navbar = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-6">
-            <Link to="/chat" className="text-foreground hover:text-primary transition-colors">
-              Chat
-            </Link>
-            <Link to="/affirmations" className="text-foreground hover:text-primary transition-colors">
-              Daily Affirmations
-            </Link>
-            <Link to="/mood-tracker" className="text-foreground hover:text-primary transition-colors">
-              Mood Tracker
-            </Link>
-            <Link to="/resources" className="text-foreground hover:text-primary transition-colors">
-              Resources
-            </Link>
-            <Link to="/about" className="text-foreground hover:text-primary transition-colors">
-              About
-            </Link>
+            {navItems
+              .filter((item) => !item.auth || user)
+              .map((item) => (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  className={`transition-colors ${
+                    location.pathname === item.path
+                      ? "text-primary font-medium"
+                      : "text-foreground hover:text-primary"
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            
+            {user ? (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleSignOut}
+                className="gap-2"
+              >
+                <LogOut className="h-4 w-4" />
+                Sign Out
+              </Button>
+            ) : (
+              <Link to="/auth">
+                <Button size="sm" className="gap-2">
+                  <User className="h-4 w-4" />
+                  Sign In
+                </Button>
+              </Link>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -52,41 +109,43 @@ const Navbar = () => {
       {isOpen && (
         <div className="md:hidden border-t border-border bg-background/95 backdrop-blur-md">
           <div className="px-4 py-4 space-y-3">
-            <Link
-              to="/chat"
-              className="block px-4 py-2 rounded-lg hover:bg-muted transition-colors"
-              onClick={() => setIsOpen(false)}
-            >
-              Chat
-            </Link>
-            <Link
-              to="/affirmations"
-              className="block px-4 py-2 rounded-lg hover:bg-muted transition-colors"
-              onClick={() => setIsOpen(false)}
-            >
-              Daily Affirmations
-            </Link>
-            <Link
-              to="/mood-tracker"
-              className="block px-4 py-2 rounded-lg hover:bg-muted transition-colors"
-              onClick={() => setIsOpen(false)}
-            >
-              Mood Tracker
-            </Link>
-            <Link
-              to="/resources"
-              className="block px-4 py-2 rounded-lg hover:bg-muted transition-colors"
-              onClick={() => setIsOpen(false)}
-            >
-              Resources
-            </Link>
-            <Link
-              to="/about"
-              className="block px-4 py-2 rounded-lg hover:bg-muted transition-colors"
-              onClick={() => setIsOpen(false)}
-            >
-              About
-            </Link>
+            {navItems
+              .filter((item) => !item.auth || user)
+              .map((item) => (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  onClick={() => setIsOpen(false)}
+                  className={`block px-4 py-2 rounded-lg transition-colors ${
+                    location.pathname === item.path
+                      ? "bg-primary/10 text-primary font-medium"
+                      : "hover:bg-muted"
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            
+            {user ? (
+              <Button
+                variant="outline"
+                onClick={() => {
+                  handleSignOut();
+                  setIsOpen(false);
+                }}
+                className="gap-2 w-full"
+              >
+                <LogOut className="h-4 w-4" />
+                Sign Out
+              </Button>
+            ) : (
+              <Link to="/auth" onClick={() => setIsOpen(false)}>
+                <Button className="gap-2 w-full">
+                  <User className="h-4 w-4" />
+                  Sign In
+                </Button>
+              </Link>
+            )}
           </div>
         </div>
       )}

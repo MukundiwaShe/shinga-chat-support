@@ -14,7 +14,105 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      journal_entries: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      mood_entries: {
+        Row: {
+          created_at: string
+          id: string
+          mood: string
+          note: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          mood: string
+          note?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          mood?: string
+          note?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          full_name: string | null
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          full_name?: string | null
+          id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          full_name?: string | null
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      weekly_challenges: {
+        Row: {
+          challenge_type: string
+          completed_at: string | null
+          created_at: string
+          id: string
+          user_id: string
+          week_start: string
+        }
+        Insert: {
+          challenge_type: string
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          user_id: string
+          week_start?: string
+        }
+        Update: {
+          challenge_type?: string
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          user_id?: string
+          week_start?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
