@@ -1,130 +1,82 @@
 import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Heart, Leaf, Droplet, BookOpen, Footprints, Loader2 } from "lucide-react";
+import { Heart, Droplet, BookOpen, Footprints } from "lucide-react";
 import Navbar from "@/components/Navbar";
-import { useNavigate } from "react-router-dom";
 
 const challengeTypes = [
   { id: "selfcare", name: "Self-Care & Relaxation", icon: Heart, description: "Take time for yourself today" },
   { id: "water", name: "Drinking Enough Water", icon: Droplet, description: "Stay hydrated throughout the day" },
   { id: "bible", name: "Bible Reading", icon: BookOpen, description: "Spend time in spiritual reflection" },
   { id: "walk", name: "Taking a Walk", icon: Footprints, description: "Get some fresh air and movement" },
-  { id: "meditation", name: "Meditation & Breathing", icon: Leaf, description: "Practice mindfulness today" },
 ];
 
 const Challenges = () => {
-  const [user, setUser] = useState<any>(null);
-  const [challenges, setChallenges] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [completedChallenges, setCompletedChallenges] = useState<Set<string>>(new Set());
   const { toast } = useToast();
-  const navigate = useNavigate();
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (!session) {
-        navigate("/auth");
-        return;
+    // Load completed challenges from localStorage
+    const startOfWeek = getStartOfWeek();
+    const storedData = localStorage.getItem('weekly_challenges');
+    
+    if (storedData) {
+      try {
+        const parsed = JSON.parse(storedData);
+        // Check if stored data is from current week
+        if (parsed.week === startOfWeek) {
+          setCompletedChallenges(new Set(parsed.completed || []));
+        } else {
+          // New week, reset challenges
+          localStorage.setItem('weekly_challenges', JSON.stringify({ week: startOfWeek, completed: [] }));
+        }
+      } catch (error) {
+        console.error("Error parsing stored challenges:", error);
       }
-      setUser(session.user);
-      loadChallenges(session.user.id);
-    });
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (!session) {
-        navigate("/auth");
-      } else {
-        setUser(session.user);
-        loadChallenges(session.user.id);
-      }
-    });
-
-    return () => subscription.unsubscribe();
-  }, [navigate]);
-
-  const loadChallenges = async (userId: string) => {
-    try {
-      const startOfWeek = new Date();
-      startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay());
-      
-      const { data, error } = await supabase
-        .from("weekly_challenges")
-        .select("*")
-        .eq("user_id", userId)
-        .gte("week_start", startOfWeek.toISOString().split('T')[0]);
-
-      if (error) throw error;
-      setChallenges(data || []);
-    } catch (error: any) {
-      toast({
-        title: "Error loading challenges",
-        description: error.message,
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
+    } else {
+      localStorage.setItem('weekly_challenges', JSON.stringify({ week: startOfWeek, completed: [] }));
     }
+  }, []);
+
+  const getStartOfWeek = () => {
+    const now = new Date();
+    const startOfWeek = new Date(now);
+    startOfWeek.setDate(now.getDate() - now.getDay());
+    startOfWeek.setHours(0, 0, 0, 0);
+    return startOfWeek.toISOString().split('T')[0];
   };
 
-  const toggleChallenge = async (challengeType: string) => {
-    if (!user) return;
-
-    try {
-      const existing = challenges.find(c => c.challenge_type === challengeType && !c.completed_at);
-      
-      if (existing) {
-        const { error } = await supabase
-          .from("weekly_challenges")
-          .update({ completed_at: new Date().toISOString() })
-          .eq("id", existing.id);
-
-        if (error) throw error;
-        
-        toast({
-          title: "Challenge completed! 🎉",
-          description: "Great job on completing this challenge!",
-        });
-      } else {
-        const { error } = await supabase
-          .from("weekly_challenges")
-          .insert({
-            user_id: user.id,
-            challenge_type: challengeType,
-            completed_at: new Date().toISOString(),
-          });
-
-        if (error) throw error;
-        
-        toast({
-          title: "Challenge completed! 🎉",
-          description: "Keep up the great work!",
-        });
-      }
-
-      loadChallenges(user.id);
-    } catch (error: any) {
+  const toggleChallenge = (challengeType: string) => {
+    const newCompleted = new Set(completedChallenges);
+    
+    if (newCompleted.has(challengeType)) {
+      newCompleted.delete(challengeType);
       toast({
-        title: "Error",
-        description: error.message,
-        variant: "destructive",
+        title: "Challenge unmarked",
+        description: "Keep going, you've got this!",
+      });
+    } else {
+      newCompleted.add(challengeType);
+      toast({
+        title: "Challenge completed! 🎉",
+        description: "Great job on your wellness journey!",
       });
     }
+
+    setCompletedChallenges(newCompleted);
+    
+    // Save to localStorage
+    const startOfWeek = getStartOfWeek();
+    localStorage.setItem('weekly_challenges', JSON.stringify({
+      week: startOfWeek,
+      completed: Array.from(newCompleted)
+    }));
   };
 
   const isChallengeCompleted = (challengeType: string) => {
-    return challenges.some(c => c.challenge_type === challengeType && c.completed_at);
+    return completedChallenges.has(challengeType);
   };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-warm flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-gradient-warm">
@@ -185,12 +137,12 @@ const Challenges = () => {
                 <div
                   className="h-full bg-gradient-sunset transition-all"
                   style={{
-                    width: `${(challenges.filter(c => c.completed_at).length / challengeTypes.length) * 100}%`,
+                    width: `${(completedChallenges.size / challengeTypes.length) * 100}%`,
                   }}
                 />
               </div>
               <span className="font-semibold">
-                {challenges.filter(c => c.completed_at).length}/{challengeTypes.length}
+                {completedChallenges.size}/{challengeTypes.length}
               </span>
             </div>
           </Card>

@@ -39,7 +39,7 @@ const Navbar = () => {
     { path: "/affirmations", label: "Affirmations" },
     { path: "/mood-tracker", label: "Mood Tracker" },
     { path: "/journal", label: "Journal", auth: true },
-    { path: "/challenges", label: "Challenges", auth: true },
+    { path: "/challenges", label: "Challenges" },
     { path: "/resources", label: "Resources" },
     { path: "/about", label: "About" },
   ];
