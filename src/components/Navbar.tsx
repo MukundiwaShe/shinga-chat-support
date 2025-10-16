@@ -74,25 +74,6 @@ const Navbar = () => {
                   {item.label}
                 </Link>
               ))}
-            
-            {user ? (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleSignOut}
-                className="gap-2"
-              >
-                <LogOut className="h-4 w-4" />
-                Sign Out
-              </Button>
-            ) : (
-              <Link to="/auth">
-                <Button size="sm" className="gap-2">
-                  <User className="h-4 w-4" />
-                  Sign In
-                </Button>
-              </Link>
-            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -125,27 +106,6 @@ const Navbar = () => {
                   {item.label}
                 </Link>
               ))}
-            
-            {user ? (
-              <Button
-                variant="outline"
-                onClick={() => {
-                  handleSignOut();
-                  setIsOpen(false);
-                }}
-                className="gap-2 w-full"
-              >
-                <LogOut className="h-4 w-4" />
-                Sign Out
-              </Button>
-            ) : (
-              <Link to="/auth" onClick={() => setIsOpen(false)}>
-                <Button className="gap-2 w-full">
-                  <User className="h-4 w-4" />
-                  Sign In
-                </Button>
-              </Link>
-            )}
           </div>
         </div>
       )}
