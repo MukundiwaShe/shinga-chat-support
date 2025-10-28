@@ -20,6 +20,12 @@ const Chat = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
+  // Clear messages when language changes
+  const handleLanguageChange = (newLanguage: string) => {
+    setLanguage(newLanguage);
+    setMessages([]);
+  };
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -168,7 +174,7 @@ const Chat = () => {
             <h1 className="text-2xl sm:text-3xl font-bold">Chat with Shinga</h1>
             <div className="flex items-center gap-2">
               <Globe className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
-              <Select value={language} onValueChange={setLanguage}>
+              <Select value={language} onValueChange={handleLanguageChange}>
                 <SelectTrigger className="w-28 sm:w-32 h-9">
                   <SelectValue />
                 </SelectTrigger>
