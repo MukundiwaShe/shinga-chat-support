@@ -161,7 +161,7 @@ const Chat = () => {
       <div className="pt-24 pb-8 px-4">
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center justify-between mb-6">
-            <h1 className="text-3xl font-bold">Chat with ShingaBot</h1>
+            <h1 className="text-3xl font-bold">Chat with Shinga</h1>
             <div className="flex items-center gap-2">
               <Globe className="h-5 w-5 text-muted-foreground" />
               <Select value={language} onValueChange={setLanguage}>
@@ -186,7 +186,7 @@ const Chat = () => {
                     <div className="w-16 h-16 rounded-full bg-gradient-sunset mx-auto mb-4 flex items-center justify-center">
                       <Bot className="h-8 w-8 text-primary-foreground" />
                     </div>
-                    <h2 className="text-xl font-semibold mb-2">Welcome to ShingaBot</h2>
+                    <h2 className="text-xl font-semibold mb-2">Welcome to Shinga</h2>
                     <p className="text-muted-foreground">
                       I'm here to listen and support you. Feel free to share what's on your mind.
                     </p>
@@ -260,7 +260,7 @@ const Chat = () => {
           </Card>
 
           <p className="text-sm text-muted-foreground text-center mt-4">
-            Remember: ShingaBot provides support but is not a substitute for professional mental health care.
+            Remember: Shinga provides support but is not a substitute for professional mental health care.
             If you're in crisis, please contact emergency services or a mental health hotline.
           </p>
         </div>

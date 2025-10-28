@@ -53,7 +53,7 @@ const Navbar = () => {
               <Heart className="h-6 w-6 text-primary-foreground" />
             </div>
             <span className="text-xl font-bold bg-gradient-sunset bg-clip-text text-transparent">
-              ShingaBot
+              Shinga
             </span>
           </Link>
 

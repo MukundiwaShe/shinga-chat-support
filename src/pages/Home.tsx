@@ -23,7 +23,7 @@ const Home = () => {
         <div className="relative max-w-4xl mx-auto text-center">
           <h1 className="text-5xl md:text-6xl font-bold mb-6 animate-fade-in">
             <span className="bg-gradient-sunset bg-clip-text text-transparent">
-              Welcome to ShingaBot
+              Welcome to Shinga
             </span>
           </h1>
           <p className="text-xl md:text-2xl text-foreground/90 mb-4 animate-fade-in" style={{ animationDelay: '0.1s' }}>
@@ -47,7 +47,7 @@ const Home = () => {
       <section className="py-20 px-4">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
-            How ShingaBot Supports You
+            How Shinga Supports You
           </h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             <Card className="p-6 hover:shadow-soft transition-all duration-300 hover:-translate-y-1">
@@ -120,7 +120,7 @@ const Home = () => {
             You Are Not Alone
           </h2>
           <p className="text-lg text-muted-foreground mb-8">
-            Take the first step toward emotional wellness. ShingaBot is here to listen, support, and guide you.
+            Take the first step toward emotional wellness. Shinga is here to listen, support, and guide you.
           </p>
           <Button asChild size="lg" className="text-lg px-8 shadow-glow">
             <Link to="/chat">Start Your Journey</Link>

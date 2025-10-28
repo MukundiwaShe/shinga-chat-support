@@ -9,11 +9,11 @@ const About = () => {
       
       <div className="pt-24 pb-12 px-4">
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-4xl font-bold mb-6">About ShingaBot</h1>
+          <h1 className="text-4xl font-bold mb-6">About Shinga</h1>
           
           <Card className="p-8 mb-6">
             <p className="text-lg mb-4">
-              ShingaBot is an AI-powered mental health chatbot designed specifically for Zimbabwean communities. 
+              Shinga is an AI-powered mental health chatbot designed specifically for Zimbabwean communities. 
               Our mission is to break down barriers to mental health support by providing accessible, culturally-sensitive, 
               and multilingual emotional support.
             </p>
