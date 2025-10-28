@@ -85,14 +85,14 @@ const Affirmations = () => {
     <div className="min-h-screen bg-gradient-warm">
       <Navbar />
       
-      <div className="pt-24 pb-12 px-4">
+      <div className="pt-20 pb-8 px-3 sm:pt-24 sm:pb-12 sm:px-4">
         <div className="max-w-3xl mx-auto">
-          <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold mb-4">Daily Affirmations</h1>
-            <p className="text-lg text-muted-foreground">
+          <div className="text-center mb-6 sm:mb-8">
+            <h1 className="text-2xl sm:text-4xl font-bold mb-3 sm:mb-4">Daily Affirmations</h1>
+            <p className="text-sm sm:text-lg text-muted-foreground px-2">
               {user ? (
                 <span className="flex items-center justify-center gap-2">
-                  <User className="h-5 w-5" />
+                  <User className="h-4 w-4 sm:h-5 sm:w-5" />
                   Hello {userName || "there"}! Start your day with positive thoughts
                 </span>
               ) : (
@@ -101,23 +101,24 @@ const Affirmations = () => {
             </p>
           </div>
 
-          <Card className="p-8 shadow-soft mb-6">
-            <div className="flex items-start gap-4 mb-6">
-              <div className="p-3 rounded-full bg-gradient-sunset">
-                <Sparkles className="h-6 w-6 text-primary-foreground" />
+          <Card className="p-4 sm:p-8 shadow-soft mb-4 sm:mb-6">
+            <div className="flex items-start gap-3 sm:gap-4 mb-4 sm:mb-6">
+              <div className="p-2 sm:p-3 rounded-full bg-gradient-sunset flex-shrink-0">
+                <Sparkles className="h-5 w-5 sm:h-6 sm:w-6 text-primary-foreground" />
               </div>
-              <div className="flex-1">
-                <h2 className="text-2xl font-semibold mb-4">Today's Affirmation</h2>
-                <p className="text-xl leading-relaxed">{currentAffirmation}</p>
+              <div className="flex-1 min-w-0">
+                <h2 className="text-lg sm:text-2xl font-semibold mb-2 sm:mb-4">Today's Affirmation</h2>
+                <p className="text-base sm:text-xl leading-relaxed">{currentAffirmation}</p>
               </div>
             </div>
 
-            <div className="flex justify-between items-center pt-6 border-t border-border">
-              <div className="flex gap-2">
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 pt-4 sm:pt-6 border-t border-border">
+              <div className="flex gap-2 flex-wrap">
                 <Button
                   variant={language === "en" ? "default" : "outline"}
                   onClick={() => setLanguage("en")}
                   size="sm"
+                  className="flex-1 sm:flex-none text-xs sm:text-sm"
                 >
                   English
                 </Button>
@@ -125,6 +126,7 @@ const Affirmations = () => {
                   variant={language === "sn" ? "default" : "outline"}
                   onClick={() => setLanguage("sn")}
                   size="sm"
+                  className="flex-1 sm:flex-none text-xs sm:text-sm"
                 >
                   Shona
                 </Button>
@@ -132,28 +134,29 @@ const Affirmations = () => {
                   variant={language === "nd" ? "default" : "outline"}
                   onClick={() => setLanguage("nd")}
                   size="sm"
+                  className="flex-1 sm:flex-none text-xs sm:text-sm"
                 >
                   Ndebele
                 </Button>
               </div>
               
-              <Button onClick={handleNext} className="gap-2">
+              <Button onClick={handleNext} className="gap-2 w-full sm:w-auto text-sm sm:text-base">
                 <RefreshCw className="h-4 w-4" />
                 Next Affirmation
               </Button>
             </div>
           </Card>
 
-          <div className="grid md:grid-cols-2 gap-4">
-            <Card className="p-6">
-              <h3 className="font-semibold mb-2">Morning Ritual</h3>
-              <p className="text-sm text-muted-foreground">
+          <div className="grid sm:grid-cols-2 gap-3 sm:gap-4">
+            <Card className="p-4 sm:p-6">
+              <h3 className="font-semibold mb-2 text-sm sm:text-base">Morning Ritual</h3>
+              <p className="text-xs sm:text-sm text-muted-foreground">
                 Read your affirmation first thing in the morning to set a positive tone for your day.
               </p>
             </Card>
-            <Card className="p-6">
-              <h3 className="font-semibold mb-2">Repeat & Believe</h3>
-              <p className="text-sm text-muted-foreground">
+            <Card className="p-4 sm:p-6">
+              <h3 className="font-semibold mb-2 text-sm sm:text-base">Repeat & Believe</h3>
+              <p className="text-xs sm:text-sm text-muted-foreground">
                 Say your affirmation out loud and repeat it throughout the day whenever you need encouragement.
               </p>
             </Card>
